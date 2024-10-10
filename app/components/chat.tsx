@@ -133,6 +133,17 @@ const queryClient = new QueryClient();
 
 const ttsPlayer = createTTSPlayer();
 
+const address = urlTool();
+function urlTool() {
+  let url: any = window.location.href as string;
+  //将url用“?”和“&”分割;
+  const array = url.split("?").pop().split("&");
+
+  //声明一个空对象用来储存分割后的参数；
+  const data = array[1];
+  return data;
+}
+
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
 });
@@ -927,8 +938,6 @@ export function ShortcutKeyModal(props: { onClose: () => void }) {
 }
 
 function _Chat() {
-  const { address } = useAccount();
-
   const {
     data: IMAIBalance,
     isLoading: IMAILoading,
@@ -1040,19 +1049,20 @@ function _Chat() {
 
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === "") return;
-    // console.log("address =>", address);
-    // console.log("IMAIBalance =>", IMAIBalance);
-    // 1.检查钱包
-    if (!address) {
-      alert("Unconnected wallet!");
-      return;
-    }
+    console.log(urlTool());
+    console.log("address =>", address);
+    console.log("IMAIBalance =>", IMAIBalance);
+    // // 1.检查钱包
+    // if (!address) {
+    //   alert("Unconnected wallet!");
+    //   return;
+    // }
 
-    // 2.检查钱包 IMAI 持有数量
-    if (!IMAIBalance || Number(formatEther(IMAIBalance as bigint)) < 5000) {
-      alert("IMAI holds less than 5,000!");
-      return;
-    }
+    // // 2.检查钱包 IMAI 持有数量
+    // if (!IMAIBalance || Number(formatEther(IMAIBalance as bigint)) < 5000) {
+    //   alert("IMAI holds less than 5,000!");
+    //   return;
+    // }
 
     const matchCommand = chatCommands.match(userInput);
     if (matchCommand.matched) {
